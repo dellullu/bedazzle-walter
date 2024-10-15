@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bedazzle Walter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap'); /* Kid-friendly font */
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fce4ec;
+      background-image: url('salon.png'); /* Set the salon background */
+      background-size: cover;
+      background-position: center;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-family: 'Chewy', cursive; /* Kid-friendly game font */
+      font-size: 3em;
+      color: #ff69b4; /* Bright pink color */
+      text-align: center;
+      margin: 0;
+      position: absolute;
+      top: 20px;
+      width: 100%;
+    }
+
+    #walter-container {
+      position: relative;
+      width: 500px; /* Increased width to make Walter bigger */
+      height: 750px; /* Adjusted height to push Walter lower */
+      display: flex;
+      justify-content: center;
+      align-items: flex-end; /* Align Walter to the bottom */
+      margin-bottom: -50px; /* Lower Walter further down */
+    }
+
+    #walter {
+      width: 450px; /* Larger size for Walter */
+    }
+
+    #gem-box {
+      width: 200px;
+      height: 250px;
+      overflow-y: scroll; /* Scrollbar for sliding */
+      background-color: #ffccd5; /* Pink background */
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 gems per row */
+      gap: 10px;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%); /* Center vertically */
+    }
+
+    .gem {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    #game-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%; /* Make sure both Walter and the gem box fit */
+      padding: 0 50px; /* Add some padding for spacing */
+    }
+
+    .draggable {
+      width: 30px; /* Small size for the gems when dropped */
+      height: 30px;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bedazzle Walter</h1>
+
+  <div id="game-container">
+    <div id="walter-container">
+      <img id="walter" src="walter.png" alt="Walter">
+    </div>
+    <div id="gem-box">
+      <!-- Generate gem images dynamically -->
+      <script>
+        const gemBox = document.getElementById('gem-box');
+        for (let i = 1; i <= 16; i++) {
+          const gem = document.createElement('img');
+          gem.src = `gem${i}.png`; // No 'images/' folder here
+          gem.alt = `gem${i}`;
+          gem.className = 'gem';
+          gem.draggable = true;
+          gemBox.appendChild(gem);
+
+          gem.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', gem.src);
+          });
+        }
+      </script>
+    </div>
+  </div>
+
+  <script>
+    const walterContainer = document.getElementById('walter-container');
+
+    walterContainer.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    walterContainer.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const gemSrc = e.dataTransfer.getData('text/plain');
+      const newGem = document.createElement('img');
+      newGem.src = gemSrc;
+      newGem.className = 'draggable';
+      newGem.style.left = `${e.clientX - walterContainer.offsetLeft - 15}px`;
+      newGem.style.top = `${e.clientY - walterContainer.offsetTop - 15}px`;
+      walterContainer.appendChild(newGem);
+    });
+  </script>
+  
+</body>
+</html>
